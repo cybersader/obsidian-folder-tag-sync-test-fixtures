@@ -19,8 +19,8 @@ Five **fixture frameworks**, each a bundle of files + rules sharing one organiza
 | **PARA** | work | 10 | 4 identity rules |
 | **Johnny Decimal** | work | 7 | 1 identity-with-numeric-prefix rule |
 | **Zettelkasten** | capture, work, relation | 6 | 5 marker-only bucket rules |
-| **SEACOW (JD-instantiated)** | system, entity, capture, output, work, relation | 13 | 6 rules across 4 transfer operations |
-| **SEACOW (Cybersader + multi-entity)** | entity, work, relation | 9 | 2 entity rules + polyhierarchy + edge cases |
+| **SEACOW (JD-instantiated)** | system, entity, capture, output, work, relation | 13 | 6 rules across 3 transfer operations (identity, truncation, marker-only) |
+| **SEACOW (Cybersader + multi-entity)** | entity, work, relation | 8 | 2 entity rules + polyhierarchy + edge cases |
 
 Each framework is a single TypeScript value — see `src/fixtures/{para,jd,zettelkasten,seacow-jd,seacow-cybersader}.ts`.
 
