@@ -3,8 +3,6 @@ import type {
   FixtureFile,
   FixtureFramework,
   FrameworkId,
-  HierarchyTransferRule,
-  TypedTag,
 } from './fixtures/types';
 import { FRAMEWORKS, FRAMEWORK_IDS, getFramework } from './fixtures';
 import { diffFixtures, type DiffResult } from './sync';
@@ -289,9 +287,11 @@ export default class FolderTagSyncFixturesPlugin extends Plugin {
 
       // Install framework's rules. We preserve any non-rules fields in the
       // main plugin's existing data so settings like enableDebug, etc. survive.
+      // Phase 2: the main plugin now understands typed fields natively — pass
+      // `folder`, `tag`, `transfer`, etc. at the top level without wrapping.
       const merged = {
         ...((existing as Record<string, unknown>) ?? {}),
-        rules: framework.rules.map(stripTypedFieldsForMainPlugin),
+        rules: framework.rules,
       };
       await ftsPlugin.saveData(merged);
 
@@ -346,53 +346,6 @@ export default class FolderTagSyncFixturesPlugin extends Plugin {
   }
 }
 
-/**
- * The main plugin's MappingRule type is a subset of HierarchyTransferRule.
- * Our rules carry extra typed fields (folder, tag, transfer, etc.) that
- * round-trip harmlessly through the main plugin's data.json, but we also
- * strip them here to keep the main plugin's settings UI clean when it lists
- * rules. Phase 2 expands MappingRule to recognize the extra fields natively.
- */
-function stripTypedFieldsForMainPlugin(rule: HierarchyTransferRule): Record<string, unknown> {
-  const {
-    id,
-    name,
-    description,
-    priority,
-    direction,
-    folderPattern,
-    tagPattern,
-    folderEntryPoint,
-    tagEntryPoint,
-    folderTransforms,
-    tagTransforms,
-    options,
-    enabled,
-    // typed fields — preserve them inside a single nested key so Phase 2 can
-    // read them, but keep them out of the top-level shape the main plugin
-    // currently validates:
-    folder,
-    tag,
-    transfer,
-    inverseTransfer,
-    cardinality,
-    bijective,
-  } = rule;
-
-  return {
-    id,
-    name,
-    description,
-    priority,
-    direction,
-    folderPattern,
-    tagPattern,
-    folderEntryPoint,
-    tagEntryPoint,
-    folderTransforms,
-    tagTransforms,
-    options,
-    enabled,
-    _typedModel: { folder, tag, transfer, inverseTransfer, cardinality, bijective },
-  };
-}
+// Phase 2: `stripTypedFieldsForMainPlugin` was removed. The main plugin's
+// MappingRule now carries `folder`, `tag`, `transfer`, etc. natively (all
+// optional) — we pass framework.rules through unchanged.

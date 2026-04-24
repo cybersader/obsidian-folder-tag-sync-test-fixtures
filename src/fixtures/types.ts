@@ -102,10 +102,31 @@ export interface TagVocabulary {
 }
 
 // ─── Hierarchy transfer: the eight library-science primitives ─────────────
+//
+// Primitives are deliberately small. Real-world mappings are usually two
+// primitives *stacked* — e.g. "preserve two levels, then aggregate the rest".
+// Rather than force users to author compositions, we carry options on the
+// primitives that cover the common composed cases:
+//
+//   - `truncation.tailHandling` covers `truncation ∘ (drop | aggregation |
+//     flattening-to-leaf)` on the deeper tail. One primitive, three modes.
+//
+// New primitives get added only when "a second primitive with a mode flag"
+// can't express the case cleanly.
+
+export type TruncationTailHandling =
+  | 'drop' // deeper segments ignored on tag side (bijective iff depth preserves info)
+  | 'aggregate' // deeper segments joined with separator into a single N+1th segment (lossy to unpack)
+  | 'flatten'; // deeper path collapses to the single leaf folder name (lossy)
 
 export type TransferOp =
   | { op: 'identity' } // pre-coordination preserved full depth
-  | { op: 'truncation'; depth: number } // bounded specificity
+  | {
+      op: 'truncation';
+      depth: number; // bounded specificity: how many segments the tag carries
+      tailHandling: TruncationTailHandling;
+      separator?: string; // required when tailHandling === 'aggregate', default '-'
+    }
   | { op: 'promotion-to-root' } // broader-term collection
   | { op: 'flattening-to-leaf' } // specific-term indexing
   | { op: 'post-coordination' } // axis split — N flat tags, one per level
