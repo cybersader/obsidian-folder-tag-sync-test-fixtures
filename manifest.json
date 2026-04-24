@@ -1,0 +1,10 @@
+{
+  "id": "folder-tag-sync-test-fixtures",
+  "name": "Folder Tag Sync Test Fixtures",
+  "version": "0.1.0",
+  "minAppVersion": "0.15.0",
+  "description": "Generates test data for Folder Tag Sync plugin development. Install via BRAT for rapid testing iteration.",
+  "author": "cybersader",
+  "authorUrl": "https://github.com/cybersader",
+  "isDesktopOnly": false
+}
