@@ -297,13 +297,15 @@ export const SEACOW_JD: FixtureFramework = {
     { path: 'Capture/Clips/Web/2026-04-01-article.md', folder: CAPTURE_CLIPS, tags: [captureNestedTag('-clip/web')] },
     { path: 'Capture/Clips/Video/yt-cognition.md', folder: CAPTURE_CLIPS, tags: [captureNestedTag('-clip/video')] },
 
-    // Output — main
-    { path: 'Output/Main/Essays/on-attention.md', folder: OUTPUT_MAIN, tags: [outputTag('_/essays/on-attention')] },
-    { path: 'Output/Main/Newsletters/2026-04.md', folder: OUTPUT_MAIN, tags: [outputTag('_/newsletters/2026-04')] },
+    // Output — main. Each note lives in its own subfolder so its identity
+    // contributes to the tag path. (`Essays/On Attention/note.md` → folder
+    // path is `Essays/On Attention` → derived tag includes `on-attention`.)
+    { path: 'Output/Main/Essays/On Attention/note.md', folder: OUTPUT_MAIN, tags: [outputTag('_/essays/on-attention')] },
+    { path: 'Output/Main/Newsletters/2026 04/note.md', folder: OUTPUT_MAIN, tags: [outputTag('_/newsletters/2026-04')] },
 
     // Output — public taxonomy
-    { path: 'Output/Public/Security/threat-modeling.md', folder: OUTPUT_PUBLIC, tags: [outputTag('_publicTaxonomy/security/threat-modeling')] },
-    { path: 'Output/Public/Security/zero-trust.md', folder: OUTPUT_PUBLIC, tags: [outputTag('_publicTaxonomy/security/zero-trust')] },
+    { path: 'Output/Public/Security/Threat Modeling/note.md', folder: OUTPUT_PUBLIC, tags: [outputTag('_publicTaxonomy/security/threat-modeling')] },
+    { path: 'Output/Public/Security/Zero Trust/note.md', folder: OUTPUT_PUBLIC, tags: [outputTag('_publicTaxonomy/security/zero-trust')] },
   ],
   rules: RULES,
 };
