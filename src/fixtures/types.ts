@@ -241,7 +241,10 @@ export type FrameworkId =
   | 'jd'
   | 'zettelkasten'
   | 'seacow-jd'
-  | 'seacow-cybersader';
+  | 'seacow-cybersader'
+  | 'faceted-research'
+  | 'compressed-index'
+  | 'container-cluster';
 
 export interface FixtureFramework {
   id: FrameworkId;

@@ -144,14 +144,14 @@ describe('coverage: every TransferOp variant is exercised by some framework', ()
 	const REQUIRED_VARIANTS: string[] = [
 		'identity',
 		'truncation:drop',
-		// Aspirational — these variants exist in the type system but no fixture
-		// yet exercises them. Add fixtures that use these (or move them out of
-		// the required list with a documented reason) to keep the invariant
-		// honest. Listed here as a TODO surface, NOT in REQUIRED_VARIANTS:
-		//   truncation:aggregate, truncation:flatten,
-		//   promotion-to-root, flattening-to-leaf, aggregation,
-		//   post-coordination, opaque
+		'truncation:aggregate',
+		'truncation:flatten',
 		'marker-only',
+		'promotion-to-root',
+		'flattening-to-leaf',
+		'aggregation',
+		'post-coordination',
+		'opaque',
 	];
 
 	test('the canonical primitives appear in some framework', () => {
@@ -201,17 +201,26 @@ describe('coverage: every TransferOp variant is exercised by some framework', ()
 	});
 });
 
-// ─── Self-consistency: rule patterns must compile + match their entry points ─
+// ─── Self-consistency: rule patterns must accept paths under their entry points ─
+//
+// The semantic the test asserts is "paths under this rule's entry point are
+// accepted by its folder pattern" — not "the bare entry matches the pattern".
+// Most patterns intentionally require content after the entry (`^Research/`
+// rejects the bare `Research/` because the rule should only fire on real
+// sub-content). Check by appending a sample child segment to the entry and
+// asserting the pattern matches that.
 
-describe('framework self-consistency: every rule\'s folderPattern accepts its folderEntryPoint', () => {
+describe('framework self-consistency: rule folderPattern accepts a child path under its folderEntryPoint', () => {
 	for (const id of FRAMEWORK_IDS) {
 		const framework = FRAMEWORKS[id];
 		describe(framework.id, () => {
 			for (const rule of framework.rules) {
 				if (!rule.folderPattern || !rule.folderEntryPoint) continue;
-				test(`rule "${rule.id}": folderPattern matches its own folderEntryPoint`, () => {
+				test(`rule "${rule.id}"`, () => {
+					const entry = rule.folderEntryPoint!;
+					const childPath = entry.endsWith('/') ? `${entry}sample` : `${entry}/sample`;
 					const re = new RegExp(rule.folderPattern!);
-					expect(re.test(rule.folderEntryPoint!)).toBe(true);
+					expect(re.test(childPath)).toBe(true);
 				});
 			}
 		});
